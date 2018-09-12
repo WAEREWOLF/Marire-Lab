@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define max_length 200
+
+int heap_array[max_length];
+int size = 0;
+
+void swap_index(int index_1,int index_2)
+{
+  int aux= heap_array[index_1];
+  heap_array[index_1]=heap_array[index_2];
+  heap_array[index_2]=aux;
+}
+
+void create_min_heap(){
+    int i = size;
+
+    while(1>0){
+        int parent = i/2;
+        if (parent > 0 && heap_array[parent] > heap_array[i]){
+            swap_index(parent,i);
+            i = parent;
+        } else {
+            break;
+        }
+    }
+}
