@@ -1,0 +1,163 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define max_length 200
+
+int heap_array[max_length];
+int size = 0;
+//found is a global variable that show the occurence of an element ( it changes to found=1 in the search_node function if the searched element exist)
+int found=0;
+
+
+//create a min heap using an array
+void create_min_heap(){
+    int i = size;
+
+    while(1>0){
+        int parent = i/2;
+        if (parent > 0 && heap_array[parent] > heap_array[i])
+        {
+            int aux = heap_array[parent];
+            heap_array[parent] = heap_array[i];
+            heap_array[i]=aux;
+            i = parent;
+        } else {
+            break;
+        }
+    }
+}
+
+
+//insert element in the min heap
+void insert_element(int key)
+   {
+    size = size + 1;
+    heap_array[size] = key;
+    create_min_heap();
+    }
+
+
+
+//first element is the smallest one in a min heap
+int display_min(){
+    return heap_array[1];
+}
+
+
+// delete an element to a given position
+int delete_element(int position){
+    int aux = heap_array[position];
+    heap_array[position] = heap_array[size];
+    size = size - 1;
+    create_min_heap();
+   }
+
+
+//print the heap
+void print_heap(){
+    int i = 1;
+    while(i <= size){
+        printf("%d ", heap_array[i]);
+        i++;
+    }
+    printf("\n");
+}
+
+
+
+struct MinHeap{
+
+    int info;
+    struct MinHeap* left, * right;
+};
+
+
+//search a node in a tree, from lab
+void search_node(struct MinHeap *root, int searched_data)
+{
+
+    struct MinHeap *current;
+    current=root;
+    if(current->info==searched_data){
+            found=1;
+            printf("DA\n");
+            return 0;
+
+        }else { if(current->left!=NULL)
+                         search_node(current->left,searched_data);
+
+                if(current->right!=NULL)
+                        search_node(current->right,searched_data);
+              }
+
+
+}
+
+
+//Makes a binary tree from a given array, recursively
+struct MinHeap* array_to_tree(struct MinHeap* root, int arr[], int k, int length){
+    if (k < length){
+        struct MinHeap* new_node = (struct MinHeap*)malloc(sizeof(struct MinHeap));
+        new_node->info = arr[k];
+        new_node->left = NULL;
+        new_node->right = NULL;
+
+        root = new_node;
+        root->left = array_to_tree(root->left,arr,2 * k + 1,length);
+        root->right = array_to_tree(root->right,arr,2 * k + 2,length);
+    }
+
+    return root;
+}
+
+
+
+
+
+int main()
+{
+   int element_number,arr[200],i,element_to_find,index;
+   printf("How many elements do you want to insert?\nElement number = ");
+   scanf("%d", &element_number);
+   for(i=0;i<element_number;i++)
+   {
+       printf("arr[%d]= ", i);
+       scanf("%d", &arr[i]);
+       insert_element(arr[i]);
+   }
+    printf("The min heap is: ");
+    print_heap();
+    printf("The min is %d \n",display_min());
+
+
+struct MinHeap* root = array_to_tree( root,heap_array, 0, size);
+printf("Give a value to search it: ");
+scanf("%d",&element_to_find);
+
+search_node(root,element_to_find);
+
+if(found == 0)
+    printf("\nNU!\n");
+
+
+printf("Choose the position of the element that you want to delete, between 1 and %d : ",size);
+
+  while (1>0)
+  {
+      scanf("%d", &index);
+      if(index < 1 || index > size)
+
+          printf("There is no element at given position! \nTry again: ");
+      else
+          {
+                    printf("Element %d will be deleted \nNew heap:", heap_array[index]);
+                    delete_element(index);
+                    break;
+            }
+
+  }
+
+   print_heap();
+
+    return 0;
+}
